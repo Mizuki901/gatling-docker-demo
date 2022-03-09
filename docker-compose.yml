@@ -1,0 +1,25 @@
+version: '3'
+services:
+  gatling:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    environment:
+      TZ: Asia/Tokyo
+    volumes:
+      - ./conf:/opt/gatling/conf
+      # - ./user-files:/opt/gatling/user-files
+      - ./results:/opt/gatling/results
+    working_dir: /opt/gatling
+    tty: true
+    stdin_open: true
+  nginx:
+    image: nginx:latest
+    links:
+      - gatling
+    ports:
+      - 3000:3000
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./results:/var/html
