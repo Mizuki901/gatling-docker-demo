@@ -1,10 +1,10 @@
-package mock.users
+package mock
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import scala.concurrent.duration._
 
-class GetUserSimuration extends Simulation {
+class GetUserAndPostsSimuration extends Simulation {
 
   val httpProtocol = http
     // テスト対象のURL
@@ -17,18 +17,23 @@ class GetUserSimuration extends Simulation {
     .userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0")
 
   // テストシナリオ
-  val scn = scenario("Get user by username")
+  val scn = scenario("Get posts by userid")
+    // /users: usernameでuseridを取得
     .exec(
       http("get_user")
         .get("/users")
         .queryParam("username", "Bret")
         .check(status.is(200))
-        .check(jsonPath("$..id").is("1"))
-        .check(jsonPath("$..email").is("Sincere@april.biz"))
-        .check(jsonPath("$..company.name").is("Romaguera-Crona"))
+        .check(jsonPath("$..id").saveAs("userid"))
+    )
+    // /posts: 先ほど取得したuseridを使って、postsを取得
+    .exec(
+      http("get_posts")
+        .get("/posts")
+        .queryParam("userid", "${userid}")
+        .check(status.is(200))
     )
 
   // 負荷のかけ方
   setUp(scn.inject(constantUsersPerSec(20).during(30)).protocols(httpProtocol)) // Open Workload Model
-  // setUp(scn.inject(constantConcurrentUsers(20).during(30)).protocols(httpProtocol)) // Closed Workload Model
 }
