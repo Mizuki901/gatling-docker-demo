@@ -1,4 +1,4 @@
 .vscode/*
 .DS_Store
-results/*
-!results/.gitkeep
+gatling/results/*
+!gatling/results/.gitkeep

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package computerdatabase
+package sample
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._

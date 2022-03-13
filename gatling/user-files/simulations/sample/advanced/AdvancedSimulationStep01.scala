@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package computerdatabase.advanced
+package sample.advanced
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import scala.concurrent.duration._
 
-class AdvancedSimulationStep02 extends Simulation {
+class AdvancedSimulationStep01 extends Simulation {
 
+  // Let's split this big scenario into composable business processes, like one would do with PageObject pattern with Selenium
+
+  // object are native Scala singletons
   object Search {
 
-    val search = exec(http("Home")
+    val search = exec(http("Home") // let's give proper names, they are displayed in the reports, and used as keys
       .get("/"))
-      .pause(1)
+      .pause(1) // let's set the pauses to 1 sec for demo purpose
       .exec(http("Search")
         .get("/computers?f=macbook"))
       .pause(1)
@@ -75,13 +78,8 @@ class AdvancedSimulationStep02 extends Simulation {
     .acceptEncodingHeader("gzip, deflate")
     .userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0")
 
-  // Let's have multiple populations
-  val users = scenario("Users").exec(Search.search, Browse.browse) // regular users can't edit
-  val admins = scenario("Admins").exec(Search.search, Browse.browse, Edit.edit)
+  // Now, we can write the scenario as a composition
+  val scn = scenario("Scenario Name").exec(Search.search, Browse.browse, Edit.edit)
 
-  // Let's have 10 regular users and 2 admins, and ramp them on 10 sec so we don't hammer the server
-  setUp(
-    users.inject(rampUsers(10) during (10 seconds)),
-    admins.inject(rampUsers(2) during (10 seconds))
-  ).protocols(httpProtocol)
+  setUp(scn.inject(atOnceUsers(1)).protocols(httpProtocol))
 }
