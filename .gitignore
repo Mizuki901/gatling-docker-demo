@@ -2,3 +2,4 @@
 .DS_Store
 gatling/results/*
 !gatling/results/.gitkeep
+mock/node_modules

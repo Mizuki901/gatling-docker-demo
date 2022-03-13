@@ -1,10 +1,13 @@
 version: '3'
 services:
+  # Gatlingを実行するための環境
   gatling:
     build:
-      context: .
-      dockerfile: ./gatling/Dockerfile
+      context: ./gatling
+      dockerfile: ./Dockerfile
     restart: always
+    tty: true
+    stdin_open: true
     environment:
       TZ: Asia/Tokyo
     volumes:
@@ -12,14 +15,25 @@ services:
       - ./gatling/user-files:/opt/gatling/user-files
       - ./gatling/results:/opt/gatling/results
     working_dir: /opt/gatling
-    tty: true
-    stdin_open: true
+  # Gatlingのテスト結果のレポートをブラウザから確認できるようにするためのコンテナ
   nginx:
     image: nginx:latest
     links:
       - gatling
-    ports:
-      - 3000:3000
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ./gatling/results:/var/html
+    ports:
+      - 3000:3000
+  # Gatlingの負荷テストを実行する対象のWebAPIモックサーバ
+  mock:
+    build:
+      context: ./mock
+      dockerfile: ./Dockerfile
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./mock:/usr/src/app
+    working_dir: /usr/src/app
+    ports:
+      - 5000:5000

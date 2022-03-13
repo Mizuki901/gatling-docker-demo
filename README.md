@@ -6,17 +6,15 @@ GatlingをDockerイメージで動作させるためのデモ用リポジトリ�
 
 ```
 .
-├── Dockerfile # Gatlingを使うためのDockerfile
-├── docker-compose.yml # Gatlingとnginxのコンテナを起動する
-├── conf # Gatlingの設定ファイル
+├── docker-compose.yml # Gatlingやその他のコンテナを起動する
+├── gatling/ # Gatlingの環境構築、シナリオ、設定などをコードで管理する
+│   ├── Dockerfile
+│   ├── conf/ # 設定ファイルを管理するディレクトリ
+│   ├── user-files/ # 負荷テストのシナリオをコードで管理するディレクトリ
+│   ├── results/ # テスト結果のレポートが格納されるディレクトリ
 │   └── ...
-├── user-files # Gatlingのシナリオをコードで管理するディレクトリ
-│   └── simulations
-│       └── ...
-├── results # Gatlingの実行結果のHTMLレポート／リクエストログが格納されるディレクトリ
-│   └── ...
-├── nginx # Gatlingの実行結果をブラウザで確認できるようにする
-│   └── default.conf
+├── nginx/ # Gatlingの実行結果をブラウザで確認できるようにnginxを利用している
+├── mock/ # 負荷テストを実行する対象のモックサーバ
 :
 ```
 
