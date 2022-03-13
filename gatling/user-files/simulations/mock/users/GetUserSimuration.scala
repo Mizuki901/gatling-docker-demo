@@ -17,14 +17,15 @@ class GetUserSimuration extends Simulation {
     .userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0")
 
   // テストシナリオ
-  val scn = scenario("Get user by id")
+  val scn = scenario("Get user by username")
     .exec(
-      http("get_user_1")
-        .get("/users/1")
+      http("get_user")
+        .get("/users")
+        .queryParam("username", "Bret")
         .check(status.is(200))
-        .check(jsonPath("$.name").is("Leanne Graham"))
-        .check(jsonPath("$.email").is("Sincere@april.biz"))
-        .check(jsonPath("$.company.name").is("Romaguera-Crona"))
+        .check(jsonPath("$..id").is("1"))
+        .check(jsonPath("$..email").is("Sincere@april.biz"))
+        .check(jsonPath("$..company.name").is("Romaguera-Crona"))
     )
 
   // 負荷のかけ方
