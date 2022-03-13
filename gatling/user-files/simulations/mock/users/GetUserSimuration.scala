@@ -20,9 +20,11 @@ class GetUserSimuration extends Simulation {
   val scn = scenario("Get user by id")
     .exec(
       http("get_user_1")
-        .get("/users")
-        .queryParam("id", "1")
+        .get("/users/1")
         .check(status.is(200))
+        .check(jsonPath("$.name").is("Leanne Graham"))
+        .check(jsonPath("$.email").is("Sincere@april.biz"))
+        .check(jsonPath("$.company.name").is("Romaguera-Crona"))
     )
 
   // 負荷のかけ方
