@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <timestamp key="timestamp" datePattern="yyyyMMddHHmm" />
     <!-- コンソール出力用の設定 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -9,13 +10,24 @@
     </appender>
     <!-- ログファイル出力用の設定 -->
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>results/logs/result.log</file>
+        <file>results/logs/${timestamp}/result.log</file>
         <append>true</append>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%-5level] %logger{15} - %msg%n%rEx</pattern>
         </encoder>
     </appender>
-    <logger name="io.gatling.http.engine.response" level="TRACE" />
+    <!-- mock/advanced/UseLogger.scalaで出力されるcsvファイルの設定 -->
+    <appender name="CSV" class="ch.qos.logback.core.FileAppender">
+        <file>results/logs/${timestamp}/result.csv</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="io.gatling.http.engine.response" level="DEBUG" />
+    <logger name="mock.advanced.UseLogger" level="INFO">
+        <appender-ref ref="CSV" />
+    </logger>
     <root level="WARN">
     <appender-ref ref="FILE" />
     </root>
