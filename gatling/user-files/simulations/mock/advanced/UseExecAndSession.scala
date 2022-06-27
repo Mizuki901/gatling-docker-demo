@@ -39,8 +39,8 @@ class UseExecAndSession extends Simulation {
     .exec(
       http("get_user")
         .get("${editedPath}")
-        .check(status.is("${status_code}"))
-        .check(jsonPath("$..name").is("${name}"))
+        .check(status.is("${expected_status_code}"))
+        .check(jsonPath("$..name").is("${expected_name}"))
     )
 
   // シナリオを実行する

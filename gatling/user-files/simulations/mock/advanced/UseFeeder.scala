@@ -27,8 +27,8 @@ class UseFeeder extends Simulation {
     .exec(
       http("get_user")
         .get("${path}") // ${...} : EL(Expression Language)式でcsvデータを動的に扱える
-        .check(status.is("${status_code}"))
-        .check(jsonPath("$..name").is("${name}"))
+        .check(status.is("${expected_status_code}"))
+        .check(jsonPath("$..name").is("${expected_name}"))
     )
 
   // シナリオを実行する
