@@ -1,4 +1,8 @@
 version: '3'
+
+volumes:
+  mock-node-modules:
+
 services:
   # Gatlingを実行するための環境
   gatling:
@@ -34,6 +38,7 @@ services:
     stdin_open: true
     volumes:
       - ./mock:/usr/src/app
+      - mock-node-modules:/usr/src/app/node_modules
     working_dir: /usr/src/app
     ports:
       - 5000:5000
