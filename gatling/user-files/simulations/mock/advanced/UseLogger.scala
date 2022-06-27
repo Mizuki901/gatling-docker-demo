@@ -3,9 +3,8 @@ package mock.advanced
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import scala.concurrent.duration._
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-import util._
+import org.slf4j.{Logger, LoggerFactory}
+import util.{HttpClient, CSVStringHelper}
 
 class UseLogger extends Simulation {
   // 実行結果をcsv形式で独自に出力するためにLoggerを利用する
@@ -15,15 +14,9 @@ class UseLogger extends Simulation {
     CSVStringHelper.join(List("path", "expected_name", "actual_name", "expected_status_code", "actual_status_code"))
   )
 
-  val httpProtocol = http
-    // テスト対象のURL
-    .baseUrl("http://host.docker.internal:5000") // host.docker.internalは、Docker for Mac/Windows上のコンテナからホストOSを参照するためのドメイン
-    // リクエストヘッダ
-    .acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-    .doNotTrackHeader("1")
-    .acceptLanguageHeader("ja,en-US;q=0.7,en;q=0.3")
-    .acceptEncodingHeader("gzip, deflate")
-    .userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0")
+  // テスト対象のURL
+  val baseUrl = "http://host.docker.internal:5000" // host.docker.internalは、Docker for Mac/Windows上のコンテナからホストOSを参照するためのドメイン
+  val httpProtocol = HttpClient.createProtocol(baseUrl)
 
   // csvからリクエストケースを読み込む
   val feeder = csv("sample-paths.csv").queue
