@@ -24,7 +24,7 @@
             <pattern>%msg%n</pattern>
         </encoder>
     </appender>
-    <logger name="io.gatling.http.engine.response" level="DEBUG" />
+    <logger name="io.gatling.http.engine.response" level="TRACE" />
     <logger name="mock.advanced.UseLogger" level="INFO">
         <appender-ref ref="CSV" />
     </logger>
