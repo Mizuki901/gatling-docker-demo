@@ -39,5 +39,5 @@ class UseExecAndSession extends Simulation {
     )
 
   // シナリオを実行する
-  setUp(scn.inject(constantUsersPerSec(1).during(24.hours)).protocols(httpProtocol))
+  setUp(scn.inject(constantUsersPerSec(5).during(24.hours)).protocols(httpProtocol))
 }
